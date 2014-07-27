@@ -40,14 +40,43 @@
 
 ## Functions 
 
+## NOTE: this implementation is heavily inspired by the example code provided 
+## The functions "makeVector" from the example and "makeCacheMatrix" are roughly
+## comparable. The same goes for the functions "cachemean" from the example and
+## the function "cacheSolve" from here.
+
 ## Creates an list that encapsulates a matrix together with it's cached inverse 
 ## matrix and getters and setters for both the original matrix and the inverse.
-## Parameter: m - A matrix. 
+## Parameter: ma - A matrix. 
 ## Returns: A list of 4 stateful functions named get, set, inverse.get, inverse.set
 ## which allow access to the the matrix and its cached inverse matrix.
 
-makeCacheMatrix <- function(m = matrix()) {
-
+makeCacheMatrix <- function(ma = matrix()) {
+    ## set the variables that need to be encapsulated
+    inv <- NULL ## declare the variable of the cache for the inverse matrix
+    
+    ## ma was already defined in the function header
+    
+    ## define the getters and setters 
+    
+    get <- function() {
+        ma
+    }
+    set <- function(new_ma) {
+        ma <<- new_ma 
+        inv <<- NULL
+    }
+    
+    inverse.get <- function() {
+        inv
+    }
+    inverse.set <- function(new_inv) {
+        inv <<- new_inv 
+    }
+    
+    ## Create the list (contents: the getters and setters)and give the functions
+    ## the same names as the variables in which the functions were defined in
+    list(get = get, set = set, inverse.get = inverse.get, inverse.set = inverse.set)
 }
 
 
@@ -56,9 +85,25 @@ makeCacheMatrix <- function(m = matrix()) {
 ## add the computed inverse matrix to the cache of the encapsulated matrix.
 ## Parameters: 
 ## l - A list with 4 stateful functions named get, set, inverse.get, inverse.set 
-## ... - the additional arguments for the solve function that is used to compute 
-## the inverse matrix. 
+## ... - the additional arguments to be passed to the the solve function 
+## that is used to compute the inverse matrix. 
+## Returns: A matrix that is the inverse of the matrix stored in l.
 
 cacheSolve <- function(l, ...) {
-        ## Return a matrix that is the inverse of matrix in 'l'
+    inv <- l$inverse.get() ## try to get the cached inverse matrix
+    if(!is.null(inv)) { ## our attempt to read from the cache was successful 
+        message("getting cached data")
+        return(inv) ## early exit from the function
+    }
+    ## we will have to compute the inverse now
+    
+    matrix <- l$get() 
+    
+    inv <- solve(matrix,...)
+    
+    l$inverse.set(inv)
+    
+    
+    ## Return a matrix that is the inverse of matrix in 'l'
+    inv
 }
