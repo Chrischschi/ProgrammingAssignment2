@@ -45,7 +45,7 @@
 ## comparable. The same goes for the functions "cachemean" from the example and
 ## the function "cacheSolve" from here.
 
-## Creates an list that encapsulates a matrix together with it's cached inverse 
+## Creates a list that encapsulates a matrix together with it's cached inverse 
 ## matrix and getters and setters for both the original matrix and the inverse.
 ## Parameter: ma - A matrix. 
 ## Returns: A list of 4 stateful functions named get, set, inverse.get, inverse.set
@@ -59,17 +59,27 @@ makeCacheMatrix <- function(ma = matrix()) {
     
     ## define the getters and setters 
     
+    ## Gets the matrix that was encapsulated.
+    ## Returns: A matrix. 
     get <- function() {
         ma
     }
+    ## Sets the matrix that was encapsulated.
+    ## Returns: NULL.
     set <- function(new_ma) {
-        ma <<- new_ma 
-        inv <<- NULL
+        ma <<- new_ma #set the matrix
+        
+        ## The matrix might have a different inverse matrix now,
+        ## so we have to invalidate the cache.
+        inv <<- NULL #invalidate by setting it to its inital state
     }
-    
+    ## Gets the cached inverse matrix. 
+    ## Returns: A matrix.
     inverse.get <- function() {
         inv
     }
+    ## Sets the cached inverse matrix.
+    ## Returns: the value that was assigned as the inverse
     inverse.set <- function(new_inv) {
         inv <<- new_inv 
     }
@@ -95,12 +105,17 @@ cacheSolve <- function(l, ...) {
         message("getting cached data")
         return(inv) ## early exit from the function
     }
+    
+    ## our attempt was not successful 
     ## we will have to compute the inverse now
     
+    ## retrieve the matrix data from the encapsulation
     matrix <- l$get() 
     
+    ## use solve to compute the inverse of a matrix
     inv <- solve(matrix,...)
     
+    ## update the cache of the encapsulation
     l$inverse.set(inv)
     
     
