@@ -119,6 +119,6 @@ cacheSolve <- function(l, ...) {
     l$inverse.set(inv)
     
     
-    ## Return a matrix that is the inverse of matrix in 'l'
+    ## Return a matrix that is the inverse of the matrix in 'l'
     inv
 }
