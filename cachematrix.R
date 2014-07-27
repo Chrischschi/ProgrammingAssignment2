@@ -9,19 +9,19 @@
 ## These functions provide an infrastructure for caching the inverse of a Matrix.
 ## The inverse M^-1 of a matrix M is the matrix for which following equation is
 ## valid: M %*% M^-1 = "Identity matrix that has the same size as M" 
-## where `%*%` is operator for matrix multiplication. 
+## where `%*%` is the operator for matrix multiplication. 
 ## Example (in R Code):
 ## mat <- matrix(1:4, nrow = 2, ncol = 2)
 ## > mat
-## [,1] [,2]
+##       [,1] [,2]
 ## [1,]    1    3
 ## [2,]    2    4
 ## > solve(mat) ## The inverse of the matrix mat 
-## [,1] [,2]
+##       [,1] [,2]
 ## [1,]   -2  1.5
 ## [2,]    1 -0.5
 ## > mat %*% solve(mat) 
-## [,1] [,2]
+##       [,1] [,2]
 ## [1,]    1    0
 ## [2,]    0    1
 
@@ -40,15 +40,17 @@
 
 ## Functions 
 
-## NOTE: this implementation is heavily inspired by the example code provided 
+## NOTE: this implementation is heavily inspired by the example code provided
+## by the Instructors in the assignment text under "Example: Caching the Mean of
+## "a Vector" 
 ## The functions "makeVector" from the example and "makeCacheMatrix" are roughly
-## comparable. The same goes for the functions "cachemean" from the example and
-## the function "cacheSolve" from here.
+## comparable. "cachemean" from the example and the function "cacheSolve" from 
+## this source code file are roughtly comparable too.
 
-## Creates a list that encapsulates a matrix together with it's cached inverse 
+## Creates a list that encapsulates a matrix together with its cached inverse 
 ## matrix and getters and setters for both the original matrix and the inverse.
 ## Parameter: ma - A matrix. 
-## Returns: A list of 4 stateful functions named get, set, inverse.get, inverse.set
+## Returns: A list of 4 functions named get, set, inverse.get, inverse.set
 ## which allow access to the the matrix and its cached inverse matrix.
 
 makeCacheMatrix <- function(ma = matrix()) {
@@ -71,7 +73,7 @@ makeCacheMatrix <- function(ma = matrix()) {
         
         ## The matrix might have a different inverse matrix now,
         ## so we have to invalidate the cache.
-        inv <<- NULL #invalidate by setting it to its inital state
+        inv <<- NULL #invalidate by setting inv to its inital state
     }
     ## Gets the cached inverse matrix. 
     ## Returns: A matrix.
@@ -94,7 +96,7 @@ makeCacheMatrix <- function(ma = matrix()) {
 ## makeCacheMatrix. If the inverse had to be computed, the function will 
 ## add the computed inverse matrix to the cache of the encapsulated matrix.
 ## Parameters: 
-## l - A list with 4 stateful functions named get, set, inverse.get, inverse.set 
+## l - A list with 4 functions named get, set, inverse.get, inverse.set 
 ## ... - the additional arguments to be passed to the the solve function 
 ## that is used to compute the inverse matrix. 
 ## Returns: A matrix that is the inverse of the matrix stored in l.
@@ -103,7 +105,7 @@ cacheSolve <- function(l, ...) {
     inv <- l$inverse.get() ## try to get the cached inverse matrix
     if(!is.null(inv)) { ## our attempt to read from the cache was successful 
         message("getting cached data")
-        return(inv) ## early exit from the function
+        return(inv) ## early exit from the function, return the cached inverse
     }
     
     ## our attempt was not successful 
